@@ -6,13 +6,14 @@ type TOptions = 'home' | 'greeting'
 
 const Stack = createNativeStackNavigator()
 
-export const Routes = () => {
-  const options: Partial<Record<TOptions, NativeStackNavigationOptions>> = {
-    home: {
-      headerShown: false,
-      autoHideHomeIndicator: false
-    }
+const options: Partial<Record<TOptions, NativeStackNavigationOptions>> = {
+  home: {
+    headerShown: false,
+    autoHideHomeIndicator: false
   }
+}
+
+export const Routes = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={'Home'}>
