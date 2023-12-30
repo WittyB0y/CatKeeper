@@ -1,13 +1,22 @@
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Button } from 'react-native';
 import { LowMenu } from "../../components"
 
-export const Home = () => {
+interface IHomeProps {
+  navigation: any
+}
+
+export const Home = ({navigation}: IHomeProps) => {
+  const handlePress = () => {
+    navigation.navigate('Greeting')
+  }
+
   return (
     <View style={{width: "100%", height: "100%"}}>
         <View style={styles.containerView}>
         <Text style={styles.container}>My cards:</Text>
         </View>
         <LowMenu></LowMenu>
+      <Button title={'Click to navigate'} onPress={handlePress} />
     </View>
   )
 }
