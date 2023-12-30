@@ -1,1 +1,1 @@
-export * from './FirstScreen'
+export * from './Greeting'
