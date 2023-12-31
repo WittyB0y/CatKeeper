@@ -16,7 +16,7 @@ const options: Partial<Record<TOptions, NativeStackNavigationOptions>> = {
 export const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={'Home'}>
+      <Stack.Navigator initialRouteName={'Greeting'}>
         <Stack.Screen name={'Home'} component={Home} options={options.home}  />
         <Stack.Screen name={'Greeting'} component={Greeting} />
       </Stack.Navigator>
