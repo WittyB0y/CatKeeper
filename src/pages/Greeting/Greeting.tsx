@@ -11,6 +11,9 @@ interface IGreetingProps {
 export const Greeting = ({navigation}: IGreetingProps) => {
   const [notify] = useNotifications();
   const [isFirstRun, setIsFirstRun] = useState<boolean>(false)
+  const handlePress = () => {
+    navigation.navigate('Home')
+  }
 
   // useEffect(() => {
   //   const checkFirstRun = async () => {
@@ -29,9 +32,7 @@ export const Greeting = ({navigation}: IGreetingProps) => {
     <View>
       <CustomButton text="Пройти обучение" fontSize={30} onPress={() => notify('Meow')}/>
       <CustomButton text="Пропустить обучение" fontSize={30} onPress={() => {
-        console.log('Fucked');
-        Vibration.vibrate([200, 100, 300]);
-        ToastAndroid.show('You are passik, u can not fuck me', ToastAndroid.SHORT)
+        handlePress();
       }}/>
     </View>
   )
