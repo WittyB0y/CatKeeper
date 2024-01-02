@@ -1,40 +1,61 @@
 import React, { useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ToastAndroid, Vibration, View } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 import { CustomButton } from '../../components';
-import { useNotifications } from '../../hooks';
+import { getCodeImg } from '../../hooks/getCodeImg';
 
 interface IGreetingProps {
-  navigation: any
+  navigation: any;
 }
 
-export const Greeting = ({navigation}: IGreetingProps) => {
-  const [notify] = useNotifications();
-  const [isFirstRun, setIsFirstRun] = useState<boolean>(false)
-  const handlePress = () => {
-    navigation.navigate('Home')
-  }
+export const Greeting = ({ navigation }: IGreetingProps) => {
+  const [image, setImage] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   const checkFirstRun = async () => {
-  //     const isFirstRun = await AsyncStorage.getItem('firstRun');
-  //
-  //     if (!isFirstRun) {
-  //       await AsyncStorage.setItem('firstRun', 'true');
-  //     }
-  //     setIsFirstRun(!isFirstRun);
-  //   };
-  //
-  //   checkFirstRun();
-  // }, []);
+  const handlePress = () => {
+    navigation.navigate('Home');
+  };
+
+  const fetchCodeImg = async () => {
+    try {
+      const img = await getCodeImg();
+      console.log('Image URL:', img);
+      setImage(img);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCodeImg();
+  }, []);
 
   return (
-    <View>
-      <CustomButton text="Пройти обучение" fontSize={30} onPress={() => notify('Meow')}/>
-      <CustomButton text="Пропустить обучение" fontSize={30} onPress={() => {
-        handlePress();
-      }}/>
+    <View style={styles.container}>
+      {image && (
+        <Image
+          source={{uri: image }}
+          style={styles.image}
+        />
+      )}
+
+      <CustomButton
+        text="Пройти обучение"
+        fontSize={30}
+        onPress={fetchCodeImg}
+      />
+      <CustomButton text="Пропустить обучение" fontSize={30} onPress={handlePress} />
     </View>
-  )
-}
-    
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+  },
+});
