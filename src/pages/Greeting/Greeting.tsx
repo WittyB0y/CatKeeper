@@ -1,32 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { CustomButton } from '../../components';
-import { getCodeImg } from '../../hooks/getCodeImg';
 
 interface IGreetingProps {
   navigation: any;
 }
 
+
 export const Greeting = ({ navigation }: IGreetingProps) => {
   const [image, setImage] = useState<string | null>(null);
-
   const handlePress = () => {
     navigation.navigate('Home');
   };
-
-  const fetchCodeImg = async () => {
-    try {
-      const img = await getCodeImg();
-      console.log('Image URL:', img);
-      setImage(img);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCodeImg();
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -35,18 +20,17 @@ export const Greeting = ({ navigation }: IGreetingProps) => {
           source={{uri: image }}
           style={styles.image}
         />
-      )}
+      )};
 
       <CustomButton
         text="Пройти обучение"
         fontSize={30}
-        onPress={fetchCodeImg}
+        onPress={handlePress}
       />
       <CustomButton text="Пропустить обучение" fontSize={30} onPress={handlePress} />
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

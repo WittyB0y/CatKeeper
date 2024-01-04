@@ -2,24 +2,30 @@ import { createNativeStackNavigator, NativeStackNavigationOptions } from "@react
 import { NavigationContainer } from "@react-navigation/native";
 import { Greeting, Home } from "../pages";
 
-type TOptions = 'home' | 'greeting'
 
-const Stack = createNativeStackNavigator()
+type TOptions = 'home' | 'greeting';
 
+const Stack = createNativeStackNavigator();
 const options: Partial<Record<TOptions, NativeStackNavigationOptions>> = {
   home: {
-    headerShown: false,
-    autoHideHomeIndicator: false
-  }
+    title: 'My cards (554)',
+    headerTitleAlign: 'center',
+
+  },
+  greeting: {
+    title: 'Welcome',
+    headerTitleAlign: 'center',
+  },
 }
+
 
 export const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={'Greeting'}>
+      <Stack.Navigator initialRouteName={'Home'}>
         <Stack.Screen name={'Home'} component={Home} options={options.home}  />
-        <Stack.Screen name={'Greeting'} component={Greeting} />
+        <Stack.Screen name={'Greeting'} component={Greeting} options={options.greeting} />
       </Stack.Navigator>
     </NavigationContainer>
-  )
-}
+  );
+};
