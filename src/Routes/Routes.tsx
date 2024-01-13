@@ -3,10 +3,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { Greeting, Home } from "../pages";
 
 
-type TOptions = 'home' | 'greeting';
+type TScreenNames = 'home' | 'greeting';
 
 const Stack = createNativeStackNavigator();
-const options: Partial<Record<TOptions, NativeStackNavigationOptions>> = {
+const options: Partial<Record<TScreenNames, NativeStackNavigationOptions>> = {
   home: {
     title: 'My cards (554)',
     headerTitleAlign: 'center',

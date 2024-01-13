@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Button, ScrollView,  } from 'react-native';
-import { LowMenu } from "../../components";
-import { Card } from '../../components/Card/Card';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAppSelector } from '../../hooks';
+import { View, StyleSheet, Button, ScrollView,  } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { addCard } from '../../store/cards/cards.slice';
+import { LowMenu, Card } from "../../components";
+import { useAppSelector } from '../../hooks';
+import { addCard } from '../../store';
 
 interface IHomeProps {
   navigation: any;
