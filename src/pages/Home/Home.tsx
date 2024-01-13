@@ -61,7 +61,7 @@ const checkFirstRun = async (): Promise<boolean> => {
         </ScrollView>
       </View>
       <LowMenu></LowMenu>
-      <Button title={'Click to navigate'} onPress={handlePress} />
+      {/*<Button title={'Click to navigate'} onPress={handlePress} />*/}
     </View>
   )
 }

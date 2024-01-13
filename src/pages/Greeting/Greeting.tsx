@@ -15,12 +15,6 @@ export const Greeting = ({ navigation }: IGreetingProps) => {
 
   return (
     <View style={styles.container}>
-      {image && (
-        <Image
-          source={{uri: image }}
-          style={styles.image}
-        />
-      )};
 
       <CustomButton
         text="Пройти обучение"
