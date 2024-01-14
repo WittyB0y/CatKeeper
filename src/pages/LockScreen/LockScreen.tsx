@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import {useNavigation} from "@react-navigation/native";
 
 const LockScreen = () => {
     const [password, setPassword] = useState('');
     const correctPassword = '12345';
-
+    const navigation = useNavigation();
     const handlePasswordChange = (text: string) => {
         setPassword(text);
     };
 
-    const handleUnlock = () => {
+    const handleUnlock = (navigation) => {
         if (password === correctPassword) {
             Alert.alert('Успех', 'Приложение разблокировано!');
+            navigation.navigate('Home');
         } else {
             Alert.alert('Ошибка', 'Неверный пароль, попробуйте еще раз.');
         }
@@ -27,7 +29,7 @@ const LockScreen = () => {
                 onChangeText={handlePasswordChange}
                 value={password}
             />
-            <Button title="Разблокировать" onPress={handleUnlock} />
+            <Button title="Разблокировать" onPress={() => handleUnlock(navigation)} />
         </View>
     );
 };
