@@ -81,28 +81,3 @@ const styles = StyleSheet.create({
   },
 });
 
-// const styles = StyleSheet.create({
-//   container: {
-//     bottom: -100,
-//     backgroundColor: 'yellow',
-//     flexWrap: 'wrap',
-//     width: `100%`,
-//     // height: `10%`,
-//     flex: 1,
-//     justifyContent: 'space-evenly',
-//     flexDirection: 'row',
-//   },
-//   menuItem: {
-//     // position: "relative",
-//     backgroundColor: 'pink',
-//     flex: 1
-//   },
-//   lowMenu: {
-//     backgroundColor: "blue",
-//     flex: 1,
-//     width: "15%",
-//     // position: "absolute",
-//     bottom: 0,
-//     height: '5%'
-//   }
-// });

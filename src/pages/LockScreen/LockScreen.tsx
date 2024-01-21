@@ -10,10 +10,13 @@ const LockScreen = () => {
         setPassword(text);
     };
 
-    const handleUnlock = (navigation) => {
+    const handleUnlock = () => {
         if (password === correctPassword) {
             Alert.alert('Успех', 'Приложение разблокировано!');
-            navigation.navigate('Home');
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Home' }],
+            });
         } else {
             Alert.alert('Ошибка', 'Неверный пароль, попробуйте еще раз.');
         }
@@ -29,7 +32,7 @@ const LockScreen = () => {
                 onChangeText={handlePasswordChange}
                 value={password}
             />
-            <Button title="Разблокировать" onPress={() => handleUnlock(navigation)} />
+            <Button title="Разблокировать" onPress={handleUnlock} />
         </View>
     );
 };
