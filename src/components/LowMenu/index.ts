@@ -1,2 +1,2 @@
 export * from './LowMenu';
-export * from './LowMenuItem'
+export * from './LowMenuItem';
