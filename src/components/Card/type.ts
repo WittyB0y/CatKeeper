@@ -1,6 +1,6 @@
 export interface ICard {
   /* interface of Card, using for read DB */
-  id: string;
+  id: number;
   code: string;
   name: string;
   type: number;

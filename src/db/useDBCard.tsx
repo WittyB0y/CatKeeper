@@ -9,17 +9,10 @@ export function useDBCard<ICard>(): ICard[] {
     // create DB if doesn't exist
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS Card (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, 
-            code VARCHAR(30), name VARCHAR(100) NOT NULL, 
-            type INTEGER DEFAULT 0, 
-            description TEXT, 
-            isFavorite BOOLEAN NOT NULL DEFAULT FALSE,
-            counter INTEGER NOT NULL DEFAULT 0, 
-            dateCreated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-            dateUpdated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-            dateLastSeen DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-            )`,
+        `CREATE TABLE IF NOT EXISTS Card (id INTEGER PRIMARY KEY AUTOINCREMENT, code VARCHAR(30), name VARCHAR(100) NOT NULL, 
+        type INTEGER DEFAULT 0, description TEXT, isFavorite BOOLEAN NOT NULL DEFAULT FALSE, counter INTEGER NOT NULL DEFAULT 0,  
+        dateCreated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,  dateUpdated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+        dateLastSeen DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)`,
       );
     });
     fetchItems();
@@ -76,5 +69,26 @@ export function deleteAllCards() {
     tx.executeSql('DELETE FROM Card', [], () => {
       //   console.log('All cards deleted successfully');
     });
+  });
+}
+
+export function updateCardById(cardId: number, card: ICard) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'UPDATE Card SET code = ?, name = ?, type = ?, description = ?, isFavorite = ?, counter = ?, dateUpdated = ? WHERE id = ?',
+      [
+        card.code,
+        card.name,
+        card.type,
+        card.description,
+        card.isFavorite ? 1 : 0,
+        card.counter,
+        (card.dateUpdated = new Date().toISOString().slice(0, 19).replace('T', ' ')),
+        cardId,
+      ],
+      () => {
+        console.log('Card updated successfully');
+      },
+    );
   });
 }

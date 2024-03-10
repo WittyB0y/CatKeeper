@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, LowMenu } from '../../components';
-import { useDBCard, addItemToCard } from '../../db/useDBCard';
+import { useDBCard } from '../../db/useDBCard';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../Routes/Routes';
 import { ICard } from '../../components/Card/type';
@@ -63,22 +63,22 @@ export const Home = ({ navigation }: IHomeProps) => {
     }
   };
 
-  const newItem = {
-    id: '',
-    code: 'ABC123',
-    name: 'Evroopt1235',
-    type: 1,
-    description: 'This is a new item',
-    isFavorite: false,
-    counter: 0,
-    dateCreated: '2022-03-21 12:00:00',
-    dateUpdated: '2022-03-21 12:00:00',
-    dateLastSeen: '2022-03-21 12:00:00',
-  };
+  // const newItem: ICard = {
+  //   code: 'ABC123',
+  //   name: 'Zhopka123',
+  //   type: 1,
+  //   description: 'This is a new item',
+  //   isFavorite: false,
+  //   counter: 0,
+  //   dateCreated: '2022-03-21 12:00:00',
+  //   dateUpdated: '2022-03-21 12:00:00',
+  //   dateLastSeen: '2022-03-21 12:00:00',
+  // };
 
-  addItemToCard(newItem);
+  // addItemToCard(newItem);
   // deleteAllCards()
   const cards: ICard[] = useDBCard();
+  console.log(cards);
 
   // console.log(useDBCard());
   return (
@@ -86,7 +86,13 @@ export const Home = ({ navigation }: IHomeProps) => {
       <View style={styles.containerView}>
         <ScrollView>
           {cards.map((elem) => (
-            <Card key={elem.id} name={elem.name} code={elem.code} />
+            <Card
+              key={elem.id}
+              name={elem.name}
+              code={elem.code}
+              isFavorite={elem.isFavorite}
+              cardData={elem}
+            />
           ))}
         </ScrollView>
       </View>
