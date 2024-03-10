@@ -3,11 +3,11 @@ export interface ICard {
   id: string;
   code: string;
   name: string;
-  type: string;
+  type: number;
   description: string;
   isFavorite: boolean;
   counter: number;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateLastSeen: Date;
+  dateCreated: string;
+  dateUpdated: string;
+  dateLastSeen: string;
 }

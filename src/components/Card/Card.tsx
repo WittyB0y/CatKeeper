@@ -9,33 +9,32 @@ export interface ICardProps {
   code?: string;
 }
 
-
 export const Card = (props: ICardProps) => {
-    const {name = "Evroopt", code = "**** 3671"} = props
-    const {cardBox, cardItem, cardContainer} = styles
-    const [active, setActive] = useState<boolean>(false);
-    const handlePressStar = () => {
-        setActive(prevState => !prevState);
-        Vibration.vibrate(50);
-    }
-    return (
-        <View style={cardBox}>
-                <Image
-                    style={cardItem}
-                    source={require("../../../assets/123.png")}
-                />
-            <View style={[Mixin.theMostCenterOfCenters, cardContainer]}>
-                <Octicons name="info" size={30} style={[styles.iconBox, styles.infoBox]}/>
-                <Text style={styles.textCars}>{name} - {code}</Text>
-                <AntDesign
-                    name="star"
-                    size={30}
-                    color={active? 'gold' : 'white'}
-                    style={[styles.iconBox, styles.favBox]}
-                    onPress={handlePressStar}/>
-            </View>
-        </View>
-    );
+  const { name, code } = props;
+  const { cardBox, cardItem, cardContainer } = styles;
+  const [active, setActive] = useState<boolean>(false);
+  const handlePressStar = () => {
+    setActive((prevState) => !prevState);
+    Vibration.vibrate(50);
+  };
+  return (
+    <View style={cardBox}>
+      <Image style={cardItem} source={require('../../../assets/123.png')} />
+      <View style={[Mixin.theMostCenterOfCenters, cardContainer]}>
+        <Octicons name='info' size={30} style={[styles.iconBox, styles.infoBox]} />
+        <Text style={styles.textCars}>
+          {name} - {code}
+        </Text>
+        <AntDesign
+          name='star'
+          size={30}
+          color={active ? 'gold' : 'white'}
+          style={[styles.iconBox, styles.favBox]}
+          onPress={handlePressStar}
+        />
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
