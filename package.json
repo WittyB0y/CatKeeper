@@ -10,7 +10,7 @@
     "tsc": "tsc --noEmit",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 ",
     "format": "prettier --no-error-on-unmatched-pattern --write src/**/*.{js,jsx,ts,tsx,scss,md,json} --config ./.prettierrc",
-    "prepare": "husky",
+    "prepare": "husky install",
     "test": "jest"
   },
   "dependencies": {

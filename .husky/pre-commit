@@ -3,6 +3,8 @@
 
 npx lint-staged --concurrent false
 
+npm run format
+
 npm run tsc
 if [ $? -ne 0 ]; then
     echo "Error: TypeScript compilation failed"
