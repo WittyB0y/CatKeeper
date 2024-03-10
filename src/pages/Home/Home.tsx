@@ -1,27 +1,33 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, StyleSheet, Button, ScrollView,  } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { LowMenu, Card } from "../../components";
-import { useAppSelector } from '../../hooks';
-import { addCard } from '../../store';
+import {Button, ScrollView, StyleSheet, View} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {Card, LowMenu} from "../../components";
+import {useAppSelector} from '../../hooks';
+import DATABase from '../../db/useDB';
+
 
 interface IHomeProps {
   navigation: any;
-};
+}
+
 
 export const Home = ({ navigation }: IHomeProps) => {
   
   const myCards = useAppSelector((state) => state.card.cards);
 
   const dispatch = useDispatch();
-
   const handlePress = () => {
-    dispatch(addCard({id: 1, name: 'Evroopt', code: '**** 3671', type: '123'}));
+
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'LockScreen' }],
+    });
   }
   
   useEffect(() => {
     const runCheckFirstRun = async () => {
+
       if (!await checkFirstRun()) {
         navigation.navigate('Greeting');
       }
@@ -29,7 +35,24 @@ export const Home = ({ navigation }: IHomeProps) => {
   
     runCheckFirstRun();
   }, []);
-  
+
+    useEffect(() => {
+      const runCheckIsSetLock = async () => {
+        if (await checkIsSetLock()) {
+          handlePress()
+        }
+      }
+      runCheckIsSetLock()
+    }, [])
+  const checkIsSetLock = async (): Promise<boolean> => {
+      try {
+        const isSetLock = await AsyncStorage.getItem('isSetLock');
+        return !(isSetLock === null || isSetLock === 'false');
+      }
+      catch (error) {
+        return false;
+      }
+  };
 
 const checkFirstRun = async (): Promise<boolean> => {
   try {
@@ -45,7 +68,7 @@ const checkFirstRun = async (): Promise<boolean> => {
     } catch (error) {
     return false;
     }
-    };
+};
 
   const cardsArray = Array.from({ length: 5 }, (_, index) => index);
   
@@ -60,8 +83,9 @@ const checkFirstRun = async (): Promise<boolean> => {
         }
         </ScrollView>
       </View>
+      <ScrollView><DATABase></DATABase></ScrollView>
       <LowMenu></LowMenu>
-      {/*<Button title={'Click to navigate'} onPress={handlePress} />*/}
+      {/* <Button title={'* Lock Screen *'} onPress={handlePress} /> */}
     </View>
   )
 }
