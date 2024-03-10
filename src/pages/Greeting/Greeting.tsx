@@ -16,8 +16,8 @@ export const Greeting = ({ navigation }: IGreetingProps) => {
 
   return (
     <View style={styles.container}>
-      <CustomButton text='Пройти обучение' fontSize={30} onPress={handlePress} />
-      <CustomButton text='Пропустить обучение' fontSize={30} onPress={handlePress} />
+      <CustomButton title='Пройти обучение' fontSizeWindowPercent={30} onPress={handlePress} />
+      <CustomButton title='Пропустить обучение' fontSizeWindowPercent={30} onPress={handlePress} />
     </View>
   );
 };
