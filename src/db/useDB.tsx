@@ -1,22 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Button } from 'react-native';
+import { useEffect, useState } from 'react';
 import { openDatabase } from 'expo-sqlite';
 
 
 // open or create the new DB
 const db = openDatabase('database.db');
 
-interface Item {
-  id: number;
-  name: string;
-  quantity: number;
-}
 
-export function useDB() {
-  const [items, setItems] = useState<Item[]>([]);
+export function useDB<T>() {
+  const [items, setItems] = useState<T[]>([]);
 
   useEffect(() => {
-    // Создаем таблицу, если она не существует
+    // create DB if dosen't exist
     db.transaction(tx => {
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, quantity INTEGER)'
@@ -79,18 +73,5 @@ export function useDB() {
       );
     });
   };
-
-//   return (
-//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: '10%'}}>
-//       <Text>Items:</Text>
-//       {items.map(item => (
-//         <View key={item.id}>
-//           <Text>{item.name} - {item.quantity}</Text>
-//           <Button title="Delete" onPress={() => deleteItem(item.id)} />
-//         </View>
-//       ))}
-//       <Button title="Add Item" onPress={addItem} />
-//     </View>
-//   );
 return {addItem, deleteItem, fetchItems};
 } 
