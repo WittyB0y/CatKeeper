@@ -11,7 +11,6 @@ export interface ICardProps {
 
 export const Card = (/* props: ICardProps */) => {
   // const { name = 'Evroopt', code = '**** 3671' } = props;
-
   const { cardBox, cardItem, cardContainer } = styles;
   const [active, setActive] = useState<boolean>(false);
   const handlePressStar = () => {

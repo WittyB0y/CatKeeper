@@ -1,12 +1,9 @@
 import React, { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView, StyleSheet, View } from 'react-native';
-// import { useDispatch } from 'react-redux';
 import { Card, LowMenu } from '../../components';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../Routes';
-// import { useAppSelector } from '../../hooks';
-// import DATABase from '../../db/useDB';
 
 interface IHomeProps {
   navigation: StackNavigationProp<RootStackParamList>;
@@ -75,9 +72,6 @@ export const Home = ({ navigation }: IHomeProps) => {
           ))}
         </ScrollView>
       </View>
-      {/* <ScrollView> */}
-      {/*   <DATABase /> */}
-      {/* </ScrollView> */}
       <LowMenu />
       {/* <Button title={'* Lock Screen *'} onPress={handlePress} /> */}
     </View>

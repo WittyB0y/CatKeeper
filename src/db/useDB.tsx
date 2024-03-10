@@ -10,12 +10,12 @@ interface Item {
   quantity: number;
 }
 
-export function useDB() {
-  const [items, setItems] = useState<Item[]>([]);
+export function useDB<T>() {
+  const [items, setItems] = useState<T[]>([]);
   console.log('', items);
 
   useEffect(() => {
-    // Создаем таблицу, если она не существует
+    // create DB if dosen't exist
     db.transaction((tx) => {
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, quantity INTEGER)',
@@ -70,7 +70,8 @@ export function useDB() {
           for (let i = 0; i < rows.length; i++) {
             data.push(rows.item(i) as Item);
           }
-          setItems(data); // Устанавливаем полученные данные в state
+          // FIXME
+          setItems(data as T[]); // Устанавливаем полученные данные в state
         },
         // (_, error) => {
         //   console.log('Error fetching items: ', error);
@@ -78,18 +79,5 @@ export function useDB() {
       );
     });
   };
-
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: '10%'}}>
-  //       <Text>Items:</Text>
-  //       {items.map(item => (
-  //         <View key={item.id}>
-  //           <Text>{item.name} - {item.quantity}</Text>
-  //           <Button title="Delete" onPress={() => deleteItem(item.id)} />
-  //         </View>
-  //       ))}
-  //       <Button title="Add Item" onPress={addItem} />
-  //     </View>
-  //   );
   return { addItem, deleteItem, fetchItems };
 }
