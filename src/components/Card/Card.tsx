@@ -2,19 +2,27 @@ import { View, Text, Image, StyleSheet, Vibration } from 'react-native';
 import { Mixin } from '../../styles';
 import { AntDesign, Octicons } from '@expo/vector-icons';
 import { useState } from 'react';
+import { updateCardById } from '../../db/useDBCard';
+import { ICard } from './type';
 
 // TODO убрать экспорт, когда будут использоваться пропсы
 export interface ICardProps {
   name?: string;
   code?: string;
+  isFavorite: boolean;
+  cardData: ICard;
 }
 
 export const Card = (props: ICardProps) => {
-  const { name, code } = props;
+  const { name, code, isFavorite, cardData } = props;
+
   const { cardBox, cardItem, cardContainer } = styles;
-  const [active, setActive] = useState<boolean>(false);
+  const [active, setActive] = useState<boolean>(isFavorite);
   const handlePressStar = () => {
+    cardData.isFavorite = !active;
     setActive((prevState) => !prevState);
+    console.log(cardData);
+    updateCardById(cardData.id, cardData);
     Vibration.vibrate(50);
   };
   return (

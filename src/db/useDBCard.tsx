@@ -78,3 +78,24 @@ export function deleteAllCards() {
     });
   });
 }
+
+export function updateCardById(cardId: number, card: ICard) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'UPDATE Card SET code = ?, name = ?, type = ?, description = ?, isFavorite = ?, counter = ?, dateUpdated = ? WHERE id = ?',
+      [
+        card.code,
+        card.name,
+        card.type,
+        card.description,
+        card.isFavorite ? 1 : 0,
+        card.counter,
+        (card.dateUpdated = new Date().toISOString().slice(0, 19).replace('T', ' ')),
+        cardId,
+      ],
+      () => {
+        console.log('Card updated successfully');
+      },
+    );
+  });
+}
