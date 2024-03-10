@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 export const Mixin = StyleSheet.create({
   centerBlockContent: {
@@ -8,7 +8,7 @@ export const Mixin = StyleSheet.create({
     width: '100%',
   },
   gap: {
-    gap: 10
+    gap: 10,
   },
   defaultScreenStyles: {
     flex: 1,
@@ -18,5 +18,5 @@ export const Mixin = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  }
-})
+  },
+});

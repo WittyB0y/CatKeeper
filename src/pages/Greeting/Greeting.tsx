@@ -1,27 +1,23 @@
-import React, { useState } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import { CustomButton } from '../../components';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../Routes';
 
 interface IGreetingProps {
-  navigation: any;
+  navigation: StackNavigationProp<RootStackParamList>;
 }
 
-
 export const Greeting = ({ navigation }: IGreetingProps) => {
-  const [image, setImage] = useState<string | null>(null);
+  // const [image, setImage] = useState<string | null>(null);
   const handlePress = () => {
     navigation.navigate('Home');
   };
 
   return (
     <View style={styles.container}>
-
-      <CustomButton
-        text="Пройти обучение"
-        fontSize={30}
-        onPress={handlePress}
-      />
-      <CustomButton text="Пропустить обучение" fontSize={30} onPress={handlePress} />
+      <CustomButton text='Пройти обучение' fontSize={30} onPress={handlePress} />
+      <CustomButton text='Пропустить обучение' fontSize={30} onPress={handlePress} />
     </View>
   );
 };

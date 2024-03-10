@@ -1,0 +1,17 @@
+npx lint-staged --concurrent false
+
+npm run format
+
+npm run tsc
+if [ $? -ne 0 ]; then
+    echo "Error: TypeScript compilation failed"
+    exit 1
+fi
+
+npm run lint
+if [ $? -ne 0 ]; then
+    echo "Error: linting failed"
+    exit 1
+fi
+
+npm run test
