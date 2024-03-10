@@ -4,6 +4,7 @@ import {Button, ScrollView, StyleSheet, View} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {Card, LowMenu} from "../../components";
 import {useAppSelector} from '../../hooks';
+import DATABase from '../../db/useDB';
 
 
 interface IHomeProps {
@@ -82,9 +83,9 @@ const checkFirstRun = async (): Promise<boolean> => {
         }
         </ScrollView>
       </View>
-      {/*<Camera></Camera>*/}
+      <ScrollView><DATABase></DATABase></ScrollView>
       <LowMenu></LowMenu>
-      <Button title={'* Lock Screen *'} onPress={handlePress} />
+      {/* <Button title={'* Lock Screen *'} onPress={handlePress} /> */}
     </View>
   )
 }

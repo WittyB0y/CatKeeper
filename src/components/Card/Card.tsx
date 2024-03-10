@@ -3,6 +3,7 @@ import {Mixin} from "../../styles";
 import { Octicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import {useState} from "react";
+import { Vibration } from 'react-native';
 
 interface ICardProps {
     name?: string;
@@ -15,7 +16,8 @@ export const Card = (props: ICardProps) => {
     const {cardBox, cardItem, cardContainer} = styles
     const [active, setActive] = useState<boolean>(false);
     const handlePressStar = () => {
-        setActive(prevState => !prevState)
+        setActive(prevState => !prevState);
+        Vibration.vibrate(50);
     }
     return (
         <View style={cardBox}>
@@ -51,7 +53,7 @@ const styles = StyleSheet.create(
         },
         cardItem: {
             width: 345,
-            height: 200,
+            height: 210,
             borderRadius: 20
         },
         cardContainer: {
