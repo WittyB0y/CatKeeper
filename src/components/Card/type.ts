@@ -1,5 +1,5 @@
 interface ICard {
-    /* interface of Card, using for read DB*/
+    /* interface of Card, using for read DB */
     id: string,
     code: string,
     name: string,

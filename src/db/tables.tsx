@@ -1,4 +1,4 @@
-const Tables = {
+export const Tables = {
     Card: {
         id: 'INTEGER PRIMARY KEY AUTOINCREMENT',
         code: 'VARCHAR(30)',
@@ -21,4 +21,4 @@ const Tables = {
     Settings: {
 
     }
-};
+} as const; 
