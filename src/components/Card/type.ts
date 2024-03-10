@@ -1,4 +1,4 @@
-interface ICard {
+export interface ICard {
   /* interface of Card, using for read DB */
   id: string;
   code: string;
