@@ -9,8 +9,8 @@ export interface ICardProps {
   code?: string;
 }
 
-export const Card = (/* props: ICardProps */) => {
-  // const { name = 'Evroopt', code = '**** 3671' } = props;
+export const Card = (props: ICardProps) => {
+  const { name, code } = props;
   const { cardBox, cardItem, cardContainer } = styles;
   const [active, setActive] = useState<boolean>(false);
   const handlePressStar = () => {
@@ -22,7 +22,9 @@ export const Card = (/* props: ICardProps */) => {
       <Image style={cardItem} source={require('../../../assets/123.png')} />
       <View style={[Mixin.theMostCenterOfCenters, cardContainer]}>
         <Octicons name='info' size={30} style={[styles.iconBox, styles.infoBox]} />
-        <Text style={styles.textCars}>Evroopt</Text>
+        <Text style={styles.textCars}>
+          {name} - {code}
+        </Text>
         <AntDesign
           name='star'
           size={30}

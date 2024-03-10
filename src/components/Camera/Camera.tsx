@@ -29,15 +29,13 @@ const PhotoComponent = () => {
       const photoExists = await FileSystem.getInfoAsync(photoPath);
 
       // TODO сделать красивее
-      let ddd;
+      // let ddd;
       // Read the contents of the directory
-      if (FileSystem.cacheDirectory != null) {
-        ddd = await FileSystem.readDirectoryAsync(FileSystem.cacheDirectory);
-      }
+      // if (FileSystem.cacheDirectory != null) {
+      //   ddd = await FileSystem.readDirectoryAsync(FileSystem.cacheDirectory);
+      // }
 
       // Log or use the list of files
-      console.log('Files in directory:', ddd);
-      console.log();
       if (photoExists.exists) {
         setPhotoUri(photoPath);
       }
