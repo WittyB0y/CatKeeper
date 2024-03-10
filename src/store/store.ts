@@ -1,13 +1,12 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { cardsSlice } from "./cards/cards.slice";
-
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { cardsSlice } from './cards/cards.slice';
 
 const rootReducer = combineReducers({
-    [cardsSlice.name]: cardsSlice.reducer
-})
+  [cardsSlice.name]: cardsSlice.reducer,
+});
 
 export const store = configureStore({
-    reducer: rootReducer
-})
+  reducer: rootReducer,
+});
 
-export type RootState = ReturnType<typeof rootReducer>
+export type RootState = ReturnType<typeof rootReducer>;

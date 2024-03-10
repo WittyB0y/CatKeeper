@@ -1,19 +1,24 @@
 import { useEffect, useState } from 'react';
 import { openDatabase } from 'expo-sqlite';
 
-
 // open or create the new DB
 const db = openDatabase('database.db');
 
+interface Item {
+  id: number;
+  name: string;
+  quantity: number;
+}
 
 export function useDB<T>() {
   const [items, setItems] = useState<T[]>([]);
+  console.log('', items);
 
   useEffect(() => {
     // create DB if dosen't exist
-    db.transaction(tx => {
+    db.transaction((tx) => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, quantity INTEGER)'
+        'CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, quantity INTEGER)',
       );
     });
     fetchItems(); // Получаем данные из базы данных при монтировании компонента
@@ -21,41 +26,41 @@ export function useDB<T>() {
 
   // Функция для добавления данных в таблицу
   const addItem = () => {
-    db.transaction(tx => {
+    db.transaction((tx) => {
       tx.executeSql(
         'INSERT INTO items (name, quantity) VALUES (?, ?)',
         ['apple', 10],
-        (_, result) => {
+        (/* _, result */) => {
           console.log('Item added successfully');
           fetchItems(); // После добавления обновляем данные
         },
-        (_, error) => {
-          console.log('Error adding item: ', error);
-        }
+        // (_, error) => {
+        //   console.log('Error adding item: ', error);
+        // },
       );
     });
   };
 
   // Функция для удаления данных из таблицы
   const deleteItem = (id: number) => {
-    db.transaction(tx => {
+    db.transaction((tx) => {
       tx.executeSql(
         'DELETE FROM items WHERE id = ?',
         [id],
-        (_, result) => {
+        (/* _, result */) => {
           console.log('Item deleted successfully');
           fetchItems(); // После удаления обновляем данные
         },
-        (_, error) => {
-          console.log('Error deleting item: ', error);
-        }
+        // (_, error) => {
+        //   console.log('Error deleting item: ', error);
+        // },
       );
     });
   };
 
   // Функция для получения данных из таблицы
   const fetchItems = () => {
-    db.transaction(tx => {
+    db.transaction((tx) => {
       tx.executeSql(
         'SELECT * FROM items',
         [],
@@ -65,13 +70,14 @@ export function useDB<T>() {
           for (let i = 0; i < rows.length; i++) {
             data.push(rows.item(i) as Item);
           }
-          setItems(data); // Устанавливаем полученные данные в state
+          // FIXME
+          setItems(data as T[]); // Устанавливаем полученные данные в state
         },
-        (_, error) => {
-          console.log('Error fetching items: ', error);
-        }
+        // (_, error) => {
+        //   console.log('Error fetching items: ', error);
+        // },
       );
     });
   };
-return {addItem, deleteItem, fetchItems};
-} 
+  return { addItem, deleteItem, fetchItems };
+}
