@@ -9,10 +9,17 @@ export function useDBCard<ICard>(): ICard[] {
     // create DB if doesn't exist
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS Card (id INTEGER PRIMARY KEY AUTOINCREMENT, code VARCHAR(30), name VARCHAR(100) NOT NULL, 
-        type INTEGER DEFAULT 0, description TEXT, isFavorite BOOLEAN NOT NULL DEFAULT FALSE, counter INTEGER NOT NULL DEFAULT 0,  
-        dateCreated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,  dateUpdated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-        dateLastSeen DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)`,
+        `CREATE TABLE IF NOT EXISTS Card (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            code VARCHAR(30), name VARCHAR(100) NOT NULL, 
+            type INTEGER DEFAULT 0, 
+            description TEXT, 
+            isFavorite BOOLEAN NOT NULL DEFAULT FALSE,
+            counter INTEGER NOT NULL DEFAULT 0, 
+            dateCreated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+            dateUpdated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+            dateLastSeen DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )`,
       );
     });
     fetchItems();

@@ -15,6 +15,7 @@ export interface ICardProps {
 
 export const Card = (props: ICardProps) => {
   const { name, code, isFavorite, cardData } = props;
+
   const { cardBox, cardItem, cardContainer } = styles;
   const [active, setActive] = useState<boolean>(isFavorite);
   const handlePressStar = () => {

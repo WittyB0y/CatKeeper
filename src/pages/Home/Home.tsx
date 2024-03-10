@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, LowMenu } from '../../components';
-import { useDBCard } from '../../db/useDBCard';
+import { useDBCard, addItemToCard } from '../../db/useDBCard';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../Routes/Routes';
 import { ICard } from '../../components/Card/type';
@@ -79,7 +79,6 @@ export const Home = ({ navigation }: IHomeProps) => {
   // deleteAllCards()
   const cards: ICard[] = useDBCard();
   console.log(cards);
-
   // console.log(useDBCard());
   return (
     <View style={{ width: '100%', height: '100%' }}>

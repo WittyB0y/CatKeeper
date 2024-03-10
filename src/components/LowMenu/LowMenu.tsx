@@ -4,6 +4,8 @@ import { Mixin } from '../../styles';
 import { IMenuButton } from './types';
 import { LowMenuItem } from './LowMenuItem';
 import { useState } from 'react';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../Routes';
 
 type IButtons = { id: number } & IMenuButton;
 
@@ -20,6 +22,7 @@ const menuButtons: IButtons[] = [
 export const LowMenu = () => {
   const [iconColorHome, setIconColorHome] = useState('black');
   const [iconColorFav, setIconColorFav] = useState('black');
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
   const handlePressHome = () => {
     if (iconColorFav === 'red') setIconColorFav('black');
@@ -32,6 +35,7 @@ export const LowMenu = () => {
     if (iconColorHome === 'red') setIconColorHome('black');
     const newColor = iconColorFav === 'black' ? 'red' : 'black';
     setIconColorFav(newColor);
+    navigation.navigate('UIkit');
   };
 
   return (
