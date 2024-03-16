@@ -22,18 +22,12 @@ export function useDBCard<ICard>(): ICard[] {
             )`,
       );
     });
-    fetchItems();
   }, []);
 
   function fetchItems() {
     db.transaction((tx) => {
       tx.executeSql('SELECT * FROM Card', [], (_, result) => {
-        const { rows } = result;
-        const data = [];
-        for (let i = 0; i < rows.length; i++) {
-          data.push(rows.item(i));
-        }
-        setItems(data);
+        setItems(result.rows._array);
       });
     });
   }

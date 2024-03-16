@@ -1,6 +1,6 @@
 export interface ICard {
   /* interface of Card, using for read DB */
-  id: number;
+  id?: number;
   code: string;
   name: string;
   type: number;
@@ -10,4 +10,11 @@ export interface ICard {
   dateCreated: string;
   dateUpdated: string;
   dateLastSeen: string;
+}
+
+export interface ICardProps {
+  name?: string;
+  code?: string;
+  isFavorite: boolean;
+  cardData: ICard;
 }

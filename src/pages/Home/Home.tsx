@@ -1,25 +1,49 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Button, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { Card, LowMenu } from '../../components';
-import { useDBCard, addItemToCard } from '../../db/useDBCard';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../Routes/Routes';
 import { ICard } from '../../components/Card/type';
+import { useDispatch } from 'react-redux';
+import { addCardToDB, deleteCard, loadCardsFromDB } from '../../store/cards/cards.slice';
+import { useAppSelector } from '../../hooks';
 
 interface IHomeProps {
   navigation: StackNavigationProp<RootStackParamList>;
 }
 
 export const Home = ({ navigation }: IHomeProps) => {
-  // const myCards = useAppSelector((state) => state.card.cards);
-  //
-  // const dispatch = useDispatch();
-  const handlePress = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'LockScreen' }],
-    });
+  const newItem: ICard = {
+    code: 'ABC123',
+    name: 'Zhopka123',
+    type: 1,
+    description: 'This is a new item',
+    isFavorite: false,
+    counter: 0,
+    dateCreated: '2022-03-21 12:00:00',
+    dateUpdated: '2022-03-21 12:00:00',
+    dateLastSeen: '2022-03-21 12:00:00',
+  };
+  const handlePress = (action: string | ICard) => {
+    if (action==="delete") deleteAllCards()
+    else addCard(newItem)
+  };
+
+  const handleAddCard = () => {
+    const newCard: ICard = {
+      code: '123456',
+      name: 'New Card',
+      type: 1,
+      description: 'Description',
+      isFavorite: false,
+      counter: 0,
+      dateCreated: new Date().toISOString(),
+      dateUpdated: new Date().toISOString(),
+      dateLastSeen: new Date().toISOString(),
+    };
+  
+    dispatch(addCardToDB(newCard)); 
   };
 
   useEffect(() => {
@@ -35,7 +59,7 @@ export const Home = ({ navigation }: IHomeProps) => {
   useEffect(() => {
     const runCheckIsSetLock = async () => {
       if (await checkIsSetLock()) {
-        handlePress();
+        handlePress(newItem);
       }
     };
     runCheckIsSetLock();
@@ -63,23 +87,27 @@ export const Home = ({ navigation }: IHomeProps) => {
     }
   };
 
-  // const newItem: ICard = {
-  //   code: 'ABC123',
-  //   name: 'Zhopka123',
-  //   type: 1,
-  //   description: 'This is a new item',
-  //   isFavorite: false,
-  //   counter: 0,
-  //   dateCreated: '2022-03-21 12:00:00',
-  //   dateUpdated: '2022-03-21 12:00:00',
-  //   dateLastSeen: '2022-03-21 12:00:00',
-  // };
 
-  // addItemToCard(newItem);
-  // deleteAllCards()
-  const cards: ICard[] = useDBCard();
-  console.log(cards);
-  // console.log(useDBCard());
+  
+
+  const dispatch = useDispatch();
+  const cards = useAppSelector(state => state.card.cards);
+  const handleInputChange = (text) => {
+    setTextInputValue(text); 
+  };
+
+  useEffect(() => {
+    dispatch(loadCardsFromDB()); 
+  }, [dispatch]);
+
+  console.log(cards, "from cards");
+
+  const [textInputValue, setTextInputValue] = useState('');
+  const handleDeleteCard = (id: number) => {
+    dispatch(deleteCard(id));
+  };
+
+
   return (
     <View style={{ width: '100%', height: '100%' }}>
       <View style={styles.containerView}>
@@ -96,7 +124,9 @@ export const Home = ({ navigation }: IHomeProps) => {
         </ScrollView>
       </View>
       <LowMenu />
-      {/* <Button title={'* Lock Screen *'} onPress={handlePress} /> */}
+      <TextInput value={textInputValue} onChangeText={handleInputChange} />
+      <Button title={'delete'} onPress={()=> handleDeleteCard(textInputValue)} />
+      <Button title={'add'} onPress={handleAddCard} />
     </View>
   );
 };
