@@ -1,3 +1,5 @@
+export type ICardWithoutId = Omit<ICard, 'id'>;
+
 export interface ICard {
   /* interface of Card, using for read DB */
   id: number;
@@ -11,3 +13,5 @@ export interface ICard {
   dateUpdated: string;
   dateLastSeen: string;
 }
+
+export type TCardProps = Pick<ICard, 'id' | 'name' | 'isFavorite' | 'code'>;

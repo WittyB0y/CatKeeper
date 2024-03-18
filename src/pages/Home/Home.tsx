@@ -1,25 +1,47 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Card, LowMenu } from '../../components';
-import { useDBCard, addItemToCard } from '../../db/useDBCard';
+import { Button, ScrollView, StyleSheet, View, Text } from 'react-native';
+import { Card, CustomButton, LowMenu } from '../../components';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../Routes/Routes';
-import { ICard } from '../../components/Card/type';
-
+import { ICardWithoutId } from '../../components/Card/type';
+import { useDBCard } from '../../db';
 interface IHomeProps {
   navigation: StackNavigationProp<RootStackParamList>;
 }
 
 export const Home = ({ navigation }: IHomeProps) => {
-  // const myCards = useAppSelector((state) => state.card.cards);
-  //
-  // const dispatch = useDispatch();
-  const handlePress = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'LockScreen' }],
-    });
+  const { cards, addCardToDB, getCards, deleteCardById } = useDBCard(); // Используем хук useDBCard
+  const [isCardsReady, setIsCardsReady] = useState<boolean>(false);
+  const newItem: ICardWithoutId = {
+    code: 'ABC123',
+    name: 'Zhopka123',
+    type: 1,
+    description: 'This is a new item',
+    isFavorite: false,
+    counter: 0,
+    dateCreated: '2022-03-21 12:00:00',
+    dateUpdated: '2022-03-21 12:00:00',
+    dateLastSeen: '2022-03-21 12:00:00',
+  };
+
+  useEffect(() => {
+    if (cards.length) setIsCardsReady(true);
+    else setIsCardsReady(false);
+  }, [cards]);
+
+  const handlePress = async () => {
+    try {
+      await addCardToDB(newItem);
+      await refreshCards();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const holdDelete = async (elemId: number) => {
+    await deleteCardById(elemId);
+    await refreshCards();
   };
 
   useEffect(() => {
@@ -35,11 +57,12 @@ export const Home = ({ navigation }: IHomeProps) => {
   useEffect(() => {
     const runCheckIsSetLock = async () => {
       if (await checkIsSetLock()) {
-        handlePress();
+        handlePress(); // Вызываем обработчик после проверки блокировки
       }
     };
     runCheckIsSetLock();
   }, []);
+
   const checkIsSetLock = async (): Promise<boolean> => {
     try {
       const isSetLock = await AsyncStorage.getItem('isSetLock');
@@ -62,41 +85,31 @@ export const Home = ({ navigation }: IHomeProps) => {
       return false;
     }
   };
+  const refreshCards = async () => {
+    const updatedCards = await getCards();
+    setIsCardsReady(updatedCards.length > 0 ? false : true);
+  };
 
-  // const newItem: ICard = {
-  //   code: 'ABC123',
-  //   name: 'Zhopka123',
-  //   type: 1,
-  //   description: 'This is a new item',
-  //   isFavorite: false,
-  //   counter: 0,
-  //   dateCreated: '2022-03-21 12:00:00',
-  //   dateUpdated: '2022-03-21 12:00:00',
-  //   dateLastSeen: '2022-03-21 12:00:00',
-  // };
-
-  // addItemToCard(newItem);
-  // deleteAllCards()
-  const cards: ICard[] = useDBCard();
-  console.log(cards);
-  // console.log(useDBCard());
   return (
     <View style={{ width: '100%', height: '100%' }}>
+      <Text> count: {cards.length} </Text>
       <View style={styles.containerView}>
         <ScrollView>
-          {cards.map((elem) => (
-            <Card
-              key={elem.id}
-              name={elem.name}
-              code={elem.code}
-              isFavorite={elem.isFavorite}
-              cardData={elem}
-            />
-          ))}
+          {isCardsReady &&
+            cards.map((elem) => (
+              <React.Fragment key={elem.id}>
+                <Card name={elem.name} code={elem.code} id={elem.id} isFavorite={elem.isFavorite} />
+                <CustomButton
+                  title='Delete card'
+                  backgroundColor='#371579'
+                  onPress={() => holdDelete(elem.id)}
+                />
+              </React.Fragment>
+            ))}
         </ScrollView>
       </View>
       <LowMenu />
-      {/* <Button title={'* Lock Screen *'} onPress={handlePress} /> */}
+      <Button title={'add'} onPress={handlePress} />
     </View>
   );
 };
