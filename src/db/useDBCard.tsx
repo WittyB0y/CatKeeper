@@ -1,17 +1,55 @@
 import { useEffect, useState } from 'react';
 import { db } from './db';
-import { ICard } from '../components/Card/type';
+import type { ICardWithoutId, ICard } from '../components/Card/type';
 
-export function useDBCard<ICard>(): ICard[] {
-  const [items, setItems] = useState<ICard[]>([]);
+type TCardsMethods = {
+  cards: ICard[];
+  getCards: TGetCards;
+  addCardToDB: TAddCardToDB;
+  deleteCardById: TDeleteCardById;
+  deleteAllCards: TDeleteAllCards;
+  updateCardById: TUpdateCardById;
+};
+
+type TGetCards = () => Promise<ICard[]>;
+type TAddCardToDB = (card: ICardWithoutId) => Promise<void>;
+type TDeleteCardById = (id: number) => Promise<void>;
+type TDeleteAllCards = () => Promise<void>;
+type TUpdateCardById = (cardId: number, cardField: Partial<ICard>) => Promise<void>;
+
+export function useDBCard(): TCardsMethods {
+  const [cards, setCards] = useState<ICard[]>([]);
+
+  const getCards: TGetCards = () => {
+    return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'SELECT * FROM Card',
+          [],
+          (_, result) => {
+            setCards(result.rows._array);
+            resolve(result.rows._array);
+          },
+          () => {
+            reject();
+            return false;
+          },
+        );
+      });
+    });
+  };
 
   useEffect(() => {
-    // create DB if doesn't exist
+    getCards();
+  }, []);
+
+  useEffect(() => {
     db.transaction((tx) => {
       tx.executeSql(
         `CREATE TABLE IF NOT EXISTS Card (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
-            code VARCHAR(30), name VARCHAR(100) NOT NULL, 
+            code VARCHAR(30), 
+            name VARCHAR(100) NOT NULL, 
             type INTEGER DEFAULT 0, 
             description TEXT, 
             isFavorite BOOLEAN NOT NULL DEFAULT FALSE,
@@ -24,72 +62,101 @@ export function useDBCard<ICard>(): ICard[] {
     });
   }, []);
 
-  function fetchItems() {
-    db.transaction((tx) => {
-      tx.executeSql('SELECT * FROM Card', [], (_, result) => {
-        setItems(result.rows._array);
+  const addCardToDB: TAddCardToDB = (card) => {
+    return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'INSERT INTO Card (code, name, type, description, isFavorite, counter, dateCreated, dateUpdated, dateLastSeen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          [
+            card.code,
+            card.name,
+            card.type,
+            card.description,
+            card.isFavorite ? 1 : 0,
+            card.counter,
+            card.dateCreated,
+            card.dateUpdated,
+            card.dateLastSeen,
+          ],
+          () => {
+            console.log('Item added successfully');
+            resolve();
+          },
+          () => {
+            console.error('Error adding item:');
+            reject();
+            return false;
+          },
+        );
       });
     });
-  }
+  };
 
-  return items;
-}
-
-export function addItemToCard(item: ICard) {
-  db.transaction((tx) => {
-    tx.executeSql(
-      'INSERT INTO Card (code, name, type, description, isFavorite, counter, dateCreated, dateUpdated, dateLastSeen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [
-        item.code,
-        item.name,
-        item.type,
-        item.description,
-        item.isFavorite ? 1 : 0,
-        item.counter,
-        item.dateCreated,
-        item.dateUpdated,
-        item.dateLastSeen,
-      ],
-      () => {
-        console.log('Item added successfully');
-      },
-    );
-  });
-}
-
-export function deleteCardById(cardId: number) {
-  db.transaction((tx) => {
-    tx.executeSql('DELETE FROM Card WHERE id = ?', [cardId], () => {
-      console.log('Card deleted successfully');
+  const deleteCardById: TDeleteCardById = (cardId) => {
+    return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'DELETE FROM Card WHERE id = ?',
+          [cardId],
+          () => {
+            console.log('Card deleted successfully');
+            resolve();
+          },
+          () => {
+            console.error('Error deleting card:');
+            reject();
+            return false;
+          },
+        );
+      });
     });
-  });
-}
+  };
 
-export function deleteAllCards() {
-  db.transaction((tx) => {
-    tx.executeSql('DELETE FROM Card', [], () => {
-      //   console.log('All cards deleted successfully');
+  const deleteAllCards: TDeleteAllCards = () => {
+    return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'DELETE FROM Card',
+          [],
+          () => {
+            console.log('All cards deleted successfully');
+            resolve();
+          },
+          () => {
+            console.error('Error deleting all cards:');
+            reject();
+            return false;
+          },
+        );
+      });
     });
-  });
-}
+  };
 
-export function updateCardById(cardId: number, card: ICard) {
-  db.transaction((tx) => {
-    tx.executeSql(
-      'UPDATE Card SET code = ?, name = ?, type = ?, description = ?, isFavorite = ?, counter = ?, dateUpdated = ? WHERE id = ?',
-      [
-        card.code,
-        card.name,
-        card.type,
-        card.description,
-        card.isFavorite ? 1 : 0,
-        card.counter,
-        (card.dateUpdated = new Date().toISOString().slice(0, 19).replace('T', ' ')),
-        cardId,
-      ],
-      () => {
-        console.log('Card updated successfully');
-      },
-    );
-  });
+  const updateCardById: TUpdateCardById = (cardId, cardField) => {
+    const fieldToUpdate = Object.keys(cardField);
+    const valuesFields: string[] = Object.values(cardField).map((elem) => String(elem));
+    const fieldsQuery: string = fieldToUpdate
+      .reduce((accumalator, currentValue) => accumalator + `${currentValue}=? `, '')
+      .split(' ')
+      .join(', ');
+    return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          `UPDATE Card SET ${fieldsQuery} dateUpdated = ? WHERE id = ${cardId}`,
+          [...valuesFields, new Date().toISOString().slice(0, 19).replace('T', ' ')],
+          () => {
+            console.log('Card updated successfully');
+            resolve();
+          },
+          () => {
+            console.error('Error updating card:');
+            reject();
+            return false; // TODO
+          },
+        );
+      });
+    });
+  };
+
+  return { cards, getCards, addCardToDB, deleteCardById, deleteAllCards, updateCardById };
 }

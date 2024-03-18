@@ -1,20 +1,19 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, ScrollView, StyleSheet, TextInput, View } from 'react-native';
-import { Card, LowMenu } from '../../components';
+import { Button, ScrollView, StyleSheet, View, Text } from 'react-native';
+import { Card, CustomButton, LowMenu } from '../../components';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../Routes/Routes';
-import { ICard } from '../../components/Card/type';
-import { useDispatch } from 'react-redux';
-import { addCardToDB, deleteCard, loadCardsFromDB } from '../../store/cards/cards.slice';
-import { useAppSelector } from '../../hooks';
-
+import { ICardWithoutId } from '../../components/Card/type';
+import { useDBCard } from '../../db';
 interface IHomeProps {
   navigation: StackNavigationProp<RootStackParamList>;
 }
 
 export const Home = ({ navigation }: IHomeProps) => {
-  const newItem: ICard = {
+  const { cards, addCardToDB, getCards, deleteCardById } = useDBCard(); // Используем хук useDBCard
+  const [isCardsReady, setIsCardsReady] = useState<boolean>(false);
+  const newItem: ICardWithoutId = {
     code: 'ABC123',
     name: 'Zhopka123',
     type: 1,
@@ -25,25 +24,24 @@ export const Home = ({ navigation }: IHomeProps) => {
     dateUpdated: '2022-03-21 12:00:00',
     dateLastSeen: '2022-03-21 12:00:00',
   };
-  const handlePress = (action: string | ICard) => {
-    if (action==="delete") deleteAllCards()
-    else addCard(newItem)
+
+  useEffect(() => {
+    if (cards.length) setIsCardsReady(true);
+    else setIsCardsReady(false);
+  }, [cards]);
+
+  const handlePress = async () => {
+    try {
+      await addCardToDB(newItem);
+      await refreshCards();
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
-  const handleAddCard = () => {
-    const newCard: ICard = {
-      code: '123456',
-      name: 'New Card',
-      type: 1,
-      description: 'Description',
-      isFavorite: false,
-      counter: 0,
-      dateCreated: new Date().toISOString(),
-      dateUpdated: new Date().toISOString(),
-      dateLastSeen: new Date().toISOString(),
-    };
-  
-    dispatch(addCardToDB(newCard)); 
+  const holdDelete = async (elemId: number) => {
+    await deleteCardById(elemId);
+    await refreshCards();
   };
 
   useEffect(() => {
@@ -59,11 +57,12 @@ export const Home = ({ navigation }: IHomeProps) => {
   useEffect(() => {
     const runCheckIsSetLock = async () => {
       if (await checkIsSetLock()) {
-        handlePress(newItem);
+        handlePress(); // Вызываем обработчик после проверки блокировки
       }
     };
     runCheckIsSetLock();
   }, []);
+
   const checkIsSetLock = async (): Promise<boolean> => {
     try {
       const isSetLock = await AsyncStorage.getItem('isSetLock');
@@ -86,47 +85,31 @@ export const Home = ({ navigation }: IHomeProps) => {
       return false;
     }
   };
-
-
-  
-
-  const dispatch = useDispatch();
-  const cards = useAppSelector(state => state.card.cards);
-  const handleInputChange = (text) => {
-    setTextInputValue(text); 
+  const refreshCards = async () => {
+    const updatedCards = await getCards();
+    setIsCardsReady(updatedCards.length > 0 ? false : true);
   };
-
-  useEffect(() => {
-    dispatch(loadCardsFromDB()); 
-  }, [dispatch]);
-
-  console.log(cards, "from cards");
-
-  const [textInputValue, setTextInputValue] = useState('');
-  const handleDeleteCard = (id: number) => {
-    dispatch(deleteCard(id));
-  };
-
 
   return (
     <View style={{ width: '100%', height: '100%' }}>
+      <Text> count: {cards.length} </Text>
       <View style={styles.containerView}>
         <ScrollView>
-          {cards.map((elem) => (
-            <Card
-              key={elem.id}
-              name={elem.name}
-              code={elem.code}
-              isFavorite={elem.isFavorite}
-              cardData={elem}
-            />
-          ))}
+          {isCardsReady &&
+            cards.map((elem) => (
+              <React.Fragment key={elem.id}>
+                <Card name={elem.name} code={elem.code} id={elem.id} isFavorite={elem.isFavorite} />
+                <CustomButton
+                  title='Delete card'
+                  backgroundColor='#371579'
+                  onPress={() => holdDelete(elem.id)}
+                />
+              </React.Fragment>
+            ))}
         </ScrollView>
       </View>
       <LowMenu />
-      <TextInput value={textInputValue} onChangeText={handleInputChange} />
-      <Button title={'delete'} onPress={()=> handleDeleteCard(textInputValue)} />
-      <Button title={'add'} onPress={handleAddCard} />
+      <Button title={'add'} onPress={handlePress} />
     </View>
   );
 };

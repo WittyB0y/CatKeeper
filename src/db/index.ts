@@ -1,2 +1,2 @@
-export * from './db'
-export * from './useDBCard'
+export * from './db';
+export * from './useDBCard';

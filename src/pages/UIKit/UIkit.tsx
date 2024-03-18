@@ -1,5 +1,5 @@
 import { ScrollView, View, StyleSheet, Text } from 'react-native';
-import { Card, CustomButton } from '../../components';
+import { CustomButton } from '../../components';
 import { Mixin } from '../../styles';
 
 export default function UIkit() {
@@ -9,7 +9,7 @@ export default function UIkit() {
   };
   return (
     <ScrollView style={[Mixin.defaultScreenStyles]}>
-      <Card />
+      {/* <Card /> */}
       <View style={[Mixin.theMostCenterOfCenters, Mixin.gap, cardBox]}>
         <Text>Наша кнопка</Text>
         <View style={smallBox}>

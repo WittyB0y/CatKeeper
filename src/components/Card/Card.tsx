@@ -2,32 +2,36 @@ import { View, Text, Image, StyleSheet, Vibration } from 'react-native';
 import { Mixin } from '../../styles';
 import { AntDesign, Octicons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
-import { ICardProps } from './type';
+import { TCardProps } from './type';
+import { useDBCard } from '../../db';
 
 // TODO убрать экспорт, когда будут использоваться пропсы
 
-export const Card = (props: ICardProps) => {
-  const { name, code, isFavorite, cardData } = props;
-
+export const Card = (props: TCardProps) => {
+  const { updateCardById } = useDBCard();
+  const { name, code, isFavorite, id } = props;
   const { cardBox, cardItem, cardContainer } = styles;
   const [active, setActive] = useState<boolean>(isFavorite);
   const handlePressStar = () => {
-    cardData.isFavorite = !active;
+    updateCardById(id, { isFavorite: !active });
     setActive((prevState) => !prevState);
     Vibration.vibrate(50);
   };
 
   useEffect(() => {
-    console.log('Render ' + cardData.id);
-    return () => console.log('Unmount ' + cardData.id)
-  }, [])
+    console.log('Render ' + id);
+    return () => console.log('Unmount ' + id);
+  }, []);
+
   return (
     <View style={cardBox}>
       <Image style={cardItem} source={require('../../../assets/123.png')} />
       <View style={[Mixin.theMostCenterOfCenters, cardContainer]}>
         <Octicons name='info' size={30} style={[styles.iconBox, styles.infoBox]} />
         <Text style={styles.textCars}>
-          name: {name}{'\n'}id:{cardData.id}{'\n'}code:{code}
+          name: {name}
+          {'\n'}id:{id}
+          {'\n'}code:{code}
         </Text>
         <AntDesign
           name='star'
