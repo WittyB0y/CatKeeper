@@ -1,7 +1,7 @@
 import { View, Text, Image, StyleSheet, Vibration } from 'react-native';
 import { Mixin } from '../../styles';
 import { AntDesign, Octicons } from '@expo/vector-icons';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { TCardProps } from './type';
 import { useDBCard } from '../../db';
 
@@ -17,11 +17,6 @@ export const Card = (props: TCardProps) => {
     setActive((prevState) => !prevState);
     Vibration.vibrate(50);
   };
-
-  useEffect(() => {
-    console.log('Render ' + id);
-    return () => console.log('Unmount ' + id);
-  }, []);
 
   return (
     <View style={cardBox}>
