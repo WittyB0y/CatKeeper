@@ -7,6 +7,7 @@ import { RootStackParamList } from '../../Routes';
 import { ICardWithoutId } from '../../components/Card/type';
 import { useDBCard } from '../../db';
 import { Entypo, MaterialIcons } from '@expo/vector-icons';
+
 interface IHomeProps {
   navigation: StackNavigationProp<RootStackParamList>;
 }
