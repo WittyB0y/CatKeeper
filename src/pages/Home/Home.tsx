@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, ScrollView, StyleSheet, View, Text } from 'react-native';
-import { Card, CustomButton, LowMenu } from '../../components';
+import { Card, CustomButton, ISelectOptionProps, LowMenu, SelectOption } from '../../components';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../Routes/Routes';
+import { RootStackParamList } from '../../Routes';
 import { ICardWithoutId } from '../../components/Card/type';
 import { useDBCard } from '../../db';
+import { Entypo, MaterialIcons } from '@expo/vector-icons';
 interface IHomeProps {
   navigation: StackNavigationProp<RootStackParamList>;
 }
@@ -87,12 +88,21 @@ export const Home = ({ navigation }: IHomeProps) => {
   };
   const refreshCards = async () => {
     const updatedCards = await getCards();
-    setIsCardsReady(updatedCards.length > 0 ? false : true);
+    setIsCardsReady(updatedCards.length <= 0);
+  };
+
+  const selectOpt: ISelectOptionProps = {
+    leftSection: <MaterialIcons name='table-rows' size={24} color='black' />,
+    rightSection: <Entypo name='grid' size={30} color='black' />,
+    onSelect: (option) => {
+      console.log(option);
+    },
   };
 
   return (
     <View style={{ width: '100%', height: '100%' }}>
       <Text> count: {cards.length} </Text>
+      <SelectOption {...selectOpt} />
       <View style={styles.containerView}>
         <ScrollView>
           {isCardsReady &&
