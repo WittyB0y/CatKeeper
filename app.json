@@ -1,5 +1,6 @@
 {
   "expo": {
+    "plugins": ["expo-notifications"],
     "name": "CatKeeper-mobile",
     "slug": "CatKeeper-mobile",
     "version": "1.0.0",
@@ -11,20 +12,28 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "permissions": {
+        "notifications": {}
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.CatKeepermobile",
+      "googleServicesFile": "./android/app/google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7306785d-87ca-4772-b9ad-4e38e2399d9c"
+      }
     }
   }
 }
